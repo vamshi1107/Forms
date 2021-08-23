@@ -1,0 +1,129 @@
+:root {
+  --color: #f0ebf8;
+  --feild-color: white;
+  --border-sides: 0.01px solid rgba(146, 143, 143, 0.555);
+  --border-top: 10px solid blueviolet;
+}
+
+.base {
+  background-color: var(--color);
+  margin: 5px auto;
+  padding: 10px;
+}
+
+.inner {
+  width: 90%;
+  margin: 0px auto;
+  background-color: var(--color);
+}
+
+@media screen and (min-width: 1200px) {
+  .base {
+    width: 800px;
+  }
+}
+
+@media screen and (min-width: 800px) and (max-width: 1200px) {
+  .base {
+    width: 700px;
+  }
+}
+
+@media only screen and (max-width: 320px) {
+  .base {
+    width: 100vw;
+  }
+}
+
+.top {
+  min-height: 150px;
+  max-height: max-content;
+  border-radius: 5px;
+  background-color: var(--feild-color);
+  margin: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  padding: 20px;
+  border-top: var(--border-top);
+  border-left: var(--border-sides);
+  border-right: var(--border-sides);
+  border-bottom: var(--border-sides);
+}
+
+#title {
+  font-size: 2rem;
+}
+
+#desp {
+  font-size: 1rem;
+}
+
+.feild {
+  min-height: 130px;
+  max-height: max-content;
+  border-radius: 5px;
+  background-color: var(--feild-color);
+  margin: 10px;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  border: var(--border-sides);
+}
+
+.feild > label {
+  font-size: 1.1rem;
+}
+
+.feild > label > div > input {
+  height: 50px;
+  width: 50%;
+  background-color: transparent;
+  border: none;
+  border-bottom: 2px solid grey;
+  outline: none;
+  transition: all 0.5s ease;
+  padding: 0px;
+  font-size: 1rem;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+.feild > label > div > input:focus {
+  border-bottom: 2px solid blueviolet;
+}
+
+.feild > label > div > div > label > input[type="radio"] {
+  width: 18px;
+  height: 18px;
+  outline: none;
+  margin-right: 10px;
+}
+
+.feild > label > div > div {
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+}
+
+.feild > label > div > div > label {
+  margin-top: 10px;
+  display: inline;
+}
+
+.clr {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.clr > span {
+  color: #1e1eca;
+  cursor: pointer;
+  font-weight: 400;
+  visibility: hidden;
+}
+
+.clr > span.clear {
+  visibility: visible;
+}
