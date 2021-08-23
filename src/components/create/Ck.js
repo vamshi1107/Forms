@@ -4,8 +4,7 @@ import  {randomBytes} from "crypto"
 
 export default (props)=>{
 
-    const pd=props.data
-    const [data,setData]=useState(pd)
+    const [data,setData]=useState(props.data)
     var dt=data;
 
     useEffect(()=>{
@@ -63,15 +62,7 @@ export default (props)=>{
         setData({...n})
     }
 
-    const removeFeild=(rem,id)=>{
-        var inner=document.querySelector(".inner")
-        var node;
-        inner.childNodes.forEach(ele=>{
-            if(ele.id==rem){
-               node=ele
-            }
-        })
-        inner.removeChild(node)
+    const removeFeild=(id)=>{
         let k=data
         k.feilds=k.feilds.filter(ele=>ele.fid!=id)
         setData({...k})
@@ -129,7 +120,7 @@ export default (props)=>{
                          </div>
                          </label>
                          <div className="bottom">
-                             <button onClick={()=>removeFeild("feild"+feild.fid,feild.fid)}>Remove</button>
+                             <button onClick={()=>removeFeild(feild.fid)}>Remove</button>
                              <input type="checkbox" onChange={(e)=>{changeReq(e,feild.fid)}}></input>
                          </div>
                       </div>
