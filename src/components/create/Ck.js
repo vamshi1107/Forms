@@ -68,6 +68,12 @@ export default (props)=>{
         setData({...k})
     }
 
+     const removeOption=(fid,oid)=>{
+        let k=data
+        k.feilds=k.feilds.filter(ele=>ele.fid!=fid)
+        
+    }
+
     const onOpChange=(e,fid)=>{
         let k=data
         let v=e.target.value
@@ -79,10 +85,11 @@ export default (props)=>{
         setData({...k})
     }
     const save=(e)=>{
-        console.log(data)
         props.setForm(data)
     }
     
+
+
     return (
         <div className="base">
             <div className="inner">
@@ -93,6 +100,7 @@ export default (props)=>{
               <div id="adder">
                   <button onClick={(e)=>AddFeild(e,1)} className="addbut">+Add Input</button>
                    <button onClick={(e)=>AddFeild(e,2)} className="addbut">+Add Choice</button>
+                   <a className="addbut" href={"/viewform?id="+data.formid} target="/">Open</a>
                    <button id="savebut" onClick={(e)=>save(e)}>Save</button>
               </div>
                {data.feilds.map((feild)=>{
@@ -111,6 +119,7 @@ export default (props)=>{
                                                <label>
                                                     <input type="radio" name={option.oid}/>
                                                     <input onChange={(e)=>optionChange(e,feild.fid,option.oid)} type="text"></input>
+                                                    <span onClick={(e)=>{removeOption(feild.fid,option.oid)}}>Remove</span>
                                                </label>
                                        )
                                    })}

@@ -6,7 +6,7 @@ export default (props)=>{
    
     const data=props.data
 
-    var [resp,setResp]=useState({"id":data.id,"responses":[]})
+    var [resp,setResp]=useState({"formid":data.formid,"responses":[]})
 
 
     const onFeildInput=(e,feild)=>{
