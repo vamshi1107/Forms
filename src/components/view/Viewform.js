@@ -1,6 +1,4 @@
 import Form from '../form/Form';
-import { useState, useEffect, useCallback} from 'react';
-import axios from 'axios';
 
 
 function View (props){

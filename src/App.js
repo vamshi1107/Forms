@@ -5,6 +5,7 @@ import Home from './components/home/Home';
 import { BrowserRouter } from 'react-router-dom';
 import Viewform from './components/view/Viewform';
 import Edit from './components/edit/Edit';
+import Response from './components/response/response';
 
 
 
@@ -16,6 +17,7 @@ function App() {
         <Route path="/" exact={true} component={Home}></Route>
         <Route path="/viewform/:id" component={Viewform}></Route>
         <Route path="/editform/:id" component={Edit}></Route>
+        <Route path="/showresponse/:id/:rid" component={Response}></Route>
       </Switch>
      </BrowserRouter>
   );

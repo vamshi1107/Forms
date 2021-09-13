@@ -17,7 +17,7 @@ input[type="text"]:focus {
 }
 
 #adder {
-  height: 25px;
+  min-height: 25px;
   border-radius: 5px;
   background-color: var(--feild-color);
   margin: 10px;
@@ -137,4 +137,28 @@ input[type="text"]:focus {
 
 a {
   text-decoration: none;
+}
+
+#oplist {
+  background-color: var(--feild-color);
+  height: 60px;
+  border: var(--border-sides);
+  border-radius: 5px;
+  margin: 10px;
+}
+
+#pills-tab {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  margin: 10px;
+}
+
+.response {
+  width: 95%;
+  background-color: var(--feild-color);
+  height: 50px;
+  border: var(--border-sides);
+  border-radius: 5px;
+  margin: 10px auto;
 }

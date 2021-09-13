@@ -2,6 +2,8 @@ import { useEffect, useState } from "react"
 import "./Form.css"
 import axios from 'axios';
 import { url } from "../server";
+import  {randomBytes} from "crypto"
+
  
 export default (props)=>{
    
@@ -21,11 +23,11 @@ export default (props)=>{
       var res=await axios.post(url+"/get",{"formid":id+""})
       var con=res.data
       setData({...con})
-      setResp({...{"formid":con.formid,"responses":[]}})
+      setResp({...{"respid":randomBytes(5).toString("hex"),"formid":con.formid,"responses":[]}})
    }
    
 
-    const onFeildInput=(e,feild)=>{
+    const onFeildInput=(e,feild,value)=>{
       var r=resp;
       var res= r.responses.filter(ele=>ele.fid!=feild.fid)||[]
       if(feild.type===1){
@@ -43,7 +45,7 @@ export default (props)=>{
             }
           }
           else{
-              res.push({"fid":feild.fid,"response":e.target.name})   
+              res.push({"fid":feild.fid,"response":value,"oid":e.target.name})   
             }
       }
       handle(e,feild)
@@ -51,8 +53,12 @@ export default (props)=>{
       setResp(r)
     }
 
-    function submit(e){
-       console.log(resp)
+    async function submit(e){
+      var res=await axios.post(url+"/addresp",resp)
+      var con=res.data
+      if(con.insertedCount>0){
+          window.location.reload(false);
+      }
     }
 
     const handle=(e,feild)=>{
@@ -103,6 +109,7 @@ export default (props)=>{
                 <span id="title">{data.name}</span>
                 <span id="desp">{data.description}</span>
               </div>
+
               {data.feilds.map((feild)=>{
                   return (
                       <div className="feild" key={feild.fid}>
@@ -110,13 +117,13 @@ export default (props)=>{
                          <div>
                              {
                              feild.type===1?
-                                 <input  type="text" name={feild.fid} id={"f"+feild.fid} onChange={(e)=> onFeildInput(e,feild)}/>
+                                 <input  type="text" name={feild.fid} id={"f"+feild.fid} onChange={(e)=> onFeildInput(e,feild,"")}/>
                              :feild.type===2?
                                 <div id={"f"+feild.fid}>
                                    {feild.options.map((option)=>{
                                        return (
                                                <label>
-                                                    <input type="radio" name={option.oid}  onChange={(e)=> onFeildInput(e,feild)}/>
+                                                    <input type="radio" name={option.oid}  onChange={(e)=> onFeildInput(e,feild,option.option)}/>
                                                     <span>{option.option}</span>
                                                </label>
                                        )

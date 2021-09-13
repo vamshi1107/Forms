@@ -3,16 +3,30 @@ import axios from 'axios'
 import  {randomBytes} from "crypto"
 import { url } from '../server'
 import "./edit.css"
+import { Link,useHistory } from "react-router-dom"
+
 
 export default (props)=>{
 
     const [data,setData]=useState({})
+    const [resp,setRep]=useState([])
+    let history=useHistory()
 
     useEffect(()=>{
          axios.post(url+"/get",{"formid":props.match.params.id}).then(res=>{
             var con=res.data
             setData({...con})
         })
+
+    },[])
+
+     useEffect(()=>{
+         axios.post(url+"/showresp",{"formid":props.match.params.id}).then(res=>{
+            var c=res.data
+            c=Array.from(c)
+            setRep(c)
+        })
+        
     },[])
 
     const setForm=(data)=>{
@@ -20,7 +34,7 @@ export default (props)=>{
         console.log("saved")
         console.log(data)
         axios.post(url+"/add",data).then(res=>{
-            console.log(res)
+            
         })
     }
 
@@ -100,6 +114,10 @@ export default (props)=>{
     const save=(e)=>{
         setForm(data)
     }
+
+    function showResponses(e,formid){
+       history.push("/showresponses/"+formid)
+    }
     
     return (
         <div className="base">
@@ -110,13 +128,31 @@ export default (props)=>{
                 <span id="title"><input onChange={DataHandler}  name="name" type="text" placeholder="Name" autoComplete="off" value={data.name}/></span>
                 <span id="desp"><input onChange={DataHandler} name="description" type="text" placeholder="Description" autoComplete="off" value={data.description}/></span>
               </div>
-              <div id="adder">
+            <div id="oplist" >
+            <ul className="nav nav-pills mb-3" id="pills-tab" role="tablist">
+               <li className="nav-item" role="presentation">
+                    <button className="nav-link active" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home" aria-selected="true">
+                     Form
+                     </button>
+               </li>
+               <li className="nav-item" role="presentation">
+                     <button className="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">
+                     Responses
+                    </button>
+              </li>
+            </ul>
+            </div>
+           <div className="tab-content" id="pills-tabContent">
+               <div className="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+
+                   <div id="adder">
                   <button onClick={(e)=>AddFeild(e,1)} className="addbut">+Add Input</button>
                    <button onClick={(e)=>AddFeild(e,2)} className="addbut">+Add Choice</button>
                    <button className="addbut"><a className="addbut" href={"/viewform/"+data.formid} target="/" onClick={save}>Open</a></button>
                    <button id="savebut" onClick={(e)=>save(e)}>Save</button>
               </div>
-               {data.feilds.map((feild)=>{
+           
+                   {data.feilds.map((feild)=>{
                   return (
                       <div className="feild" id={"feild"+feild.fid}>
                          <label><input placeholder="Enter title" value={feild.title} onInput={(e)=>{onOpChange(e,feild.fid)}} onChange={(e)=>{onOpChange(e,feild.fid)}} />
@@ -147,10 +183,25 @@ export default (props)=>{
                          </div>
                       </div>
                   )
-              })}
+                   })}
+               </div>
+              <div className="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+                  <div className="respcon">
+                 {resp.length>0 && resp.map(r=>{
+                     return (
+                         <div className="response">
+                           <Link to={"/showresponse/"+r.formid+"/"+r.respid}>{r.formid}</Link>
+                         </div>
+                     )
+                 })}
+                 </div>
+              </div>
+
+            </div>
             
             </div>
          }
+
         </div>
     )
 
