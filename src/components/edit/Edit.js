@@ -1,15 +1,28 @@
-import { useState,useEffect } from "react"
-import "./Create.css"
+import {useEffect, useState} from 'react'
+import axios from 'axios'
 import  {randomBytes} from "crypto"
+import { url } from '../server'
+import "./edit.css"
 
 export default (props)=>{
 
-    const [data,setData]=useState(props.data)
-    var dt=data;
+    const [data,setData]=useState({})
 
     useEffect(()=>{
-        setData(dt)
-    },[dt])
+         axios.post(url+"/get",{"formid":props.match.params.id}).then(res=>{
+            var con=res.data
+            setData({...con})
+        })
+    },[])
+
+    const setForm=(data)=>{
+        setData(data)
+        console.log("saved")
+        console.log(data)
+        axios.post(url+"/add",data).then(res=>{
+            console.log(res)
+        })
+    }
 
     const DataHandler=(e)=>{
          let d=data
@@ -19,7 +32,7 @@ export default (props)=>{
 
     const AddFeild=(e,type)=>{
         var n={"fid":randomBytes(5).toString("hex"),"title":"","type":type,"required":false}
-        if(type==2){
+        if(type===2){
             n["options"]=[]
         }
         let r=data
@@ -30,8 +43,8 @@ export default (props)=>{
     const changeReq=(e,fid)=>{
           let k=data
           k.feilds.map(ele=>{
-            if(ele.fid==fid){
-                ele.required=e.target.value=="on"
+            if(ele.fid===fid){
+                ele.required=e.target.value==="on"
             }
         })
         setData({...k})
@@ -41,7 +54,7 @@ export default (props)=>{
         let o= {"oid":randomBytes(3).toString("hex"),"option":""}
         let k=data
         k.feilds.map((feild)=>{
-            if(feild.fid==n.fid){
+            if(feild.fid===n.fid){
                 feild.options.push(o)
             }
         })
@@ -51,9 +64,9 @@ export default (props)=>{
     const optionChange=(e,fid,oid)=>{
         let n=data
         n.feilds.map((feild)=>{
-            if(feild.fid==fid){
+            if(feild.fid===fid){
                 feild.options.map(op=>{
-                    if(op.oid==oid){
+                    if(op.oid===oid){
                       op.option=e.target.value
                     }
                 })
@@ -64,13 +77,13 @@ export default (props)=>{
 
     const removeFeild=(id)=>{
         let k=data
-        k.feilds=k.feilds.filter(ele=>ele.fid!=id)
+        k.feilds=k.feilds.filter(ele=>ele.fid!==id)
         setData({...k})
     }
 
      const removeOption=(fid,oid)=>{
         let k=data
-        k.feilds=k.feilds.filter(ele=>ele.fid!=fid)
+        k.feilds=k.feilds.filter(ele=>ele.fid!==fid)
         
     }
 
@@ -78,35 +91,35 @@ export default (props)=>{
         let k=data
         let v=e.target.value
         k.feilds.map(ele=>{
-            if(ele.fid==fid){
+            if(ele.fid===fid){
                 ele.title=v
             }
         })
         setData({...k})
     }
     const save=(e)=>{
-        props.setForm(data)
+        setForm(data)
     }
     
-
-
     return (
         <div className="base">
+            {Object.keys(data).length>0&&
             <div className="inner">
+            
               <div className="top">
-                <span id="title"><input onChange={DataHandler}  name="name" type="text" placeholder="Name" autoComplete="off"/></span>
-                <span id="desp"><input onChange={DataHandler} name="description" type="text" placeholder="Description" autoComplete="off"/></span>
+                <span id="title"><input onChange={DataHandler}  name="name" type="text" placeholder="Name" autoComplete="off" value={data.name}/></span>
+                <span id="desp"><input onChange={DataHandler} name="description" type="text" placeholder="Description" autoComplete="off" value={data.description}/></span>
               </div>
               <div id="adder">
                   <button onClick={(e)=>AddFeild(e,1)} className="addbut">+Add Input</button>
                    <button onClick={(e)=>AddFeild(e,2)} className="addbut">+Add Choice</button>
-                   <a className="addbut" href={"/viewform?id="+data.formid} target="/">Open</a>
+                   <button className="addbut"><a className="addbut" href={"/viewform/"+data.formid} target="/" onClick={save}>Open</a></button>
                    <button id="savebut" onClick={(e)=>save(e)}>Save</button>
               </div>
                {data.feilds.map((feild)=>{
                   return (
                       <div className="feild" id={"feild"+feild.fid}>
-                         <label><input placeholder="Enter title"  onInput={(e)=>{onOpChange(e,feild.fid)}} onChange={(e)=>{onOpChange(e,feild.fid)}} />
+                         <label><input placeholder="Enter title" value={feild.title} onInput={(e)=>{onOpChange(e,feild.fid)}} onChange={(e)=>{onOpChange(e,feild.fid)}} />
                          <div>
                              {
                              feild.type===1?
@@ -118,7 +131,7 @@ export default (props)=>{
                                        return (
                                                <label>
                                                     <input type="radio" name={option.oid}/>
-                                                    <input onChange={(e)=>optionChange(e,feild.fid,option.oid)} type="text"></input>
+                                                    <input onChange={(e)=>optionChange(e,feild.fid,option.oid)} type="text" value={option.option}></input>
                                                     <span onClick={(e)=>{removeOption(feild.fid,option.oid)}}>Remove</span>
                                                </label>
                                        )
@@ -135,7 +148,9 @@ export default (props)=>{
                       </div>
                   )
               })}
+            
             </div>
+         }
         </div>
     )
 

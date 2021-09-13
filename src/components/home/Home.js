@@ -1,23 +1,58 @@
 import Create from "../create/Ck"
-import {useState} from 'react'
+import {useEffect, useState} from 'react'
 import axios from 'axios'
 import  {randomBytes} from "crypto"
+import "./home.css"
+import { Link,useHistory } from "react-router-dom"
+import { url } from "../server"
+
+
 
 
 export default (props)=>{
-    const [data,setData]=useState({"formid":randomBytes(7).toString("hex"),"name":"","description":"","feilds":[]})
+    const [forms,setForms]=useState([])
 
-    const setForm=(data)=>{
-        setData(data)
-        console.log("saved")
-        axios.post("https://myserver1107.herokuapp.com/form/add",data).then(res=>{
-            console.log(res)
+    let history = useHistory();
+ 
+
+    useEffect(()=>{
+       getForms(1)
+    },[])
+
+
+    async function getForms(id) {
+      var res=await axios.post(url+"/getall",{"formid":id+""})
+      var con=res.data
+      setForms(con)
+      console.log(forms)
+   }
+
+   function create(){
+       var id=randomBytes(8).toString("hex")
+       var form={"formid":id,"feilds":[]}
+        console.log(form)
+        axios.post(url+"/add",form).then(res=>{
+            var status=res.data.status
+            if (status===1 || status === 2){
+               history.push("/editform/"+id)
+            }
         })
-    }
+   }
 
     return (
         <div>
-            <Create data={data} setForm={setForm}/>
+            {forms.length>0 &&
+            <div className="formcon">
+                <div  className="form" onClick={create}>Create</div>
+                {forms.map(ele=>{
+                     return(
+                   <Link to={"editform/"+ele.formid}><div key={ele.formid} className="form">{ele.name}</div></Link>
+                   ) 
+               })
+             }
+            </div>
+            }
+           
         </div>
     )
 }

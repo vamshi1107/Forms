@@ -127,3 +127,21 @@
 .clr > span.clear {
   visibility: visible;
 }
+
+.subcon {
+  height: 70px;
+  border-radius: 5px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+#submit {
+  width: 100px;
+  height: 40px;
+  font-size: 1rem;
+  background-color: rgb(168, 117, 216);
+  border-radius: 5px;
+  border: var(--border-sides);
+  cursor: pointer;
+  margin-right: 10px;
+}

@@ -1,13 +1,29 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import "./Form.css"
+import axios from 'axios';
+import { url } from "../server";
  
-
 export default (props)=>{
    
-    const data=props.data
+    var [data,setData]=useState({})
+    var [resp,setResp]=useState({})
 
-    var [resp,setResp]=useState({"formid":data.formid,"responses":[]})
+    var id=props.id
 
+     useEffect(()=>{
+        getData(id)
+
+     },[id])
+
+
+    async function getData(id) {
+      console.log("started")
+      var res=await axios.post(url+"/get",{"formid":id+""})
+      var con=res.data
+      setData({...con})
+      setResp({...{"formid":con.formid,"responses":[]}})
+   }
+   
 
     const onFeildInput=(e,feild)=>{
       var r=resp;
@@ -33,7 +49,10 @@ export default (props)=>{
       handle(e,feild)
       r.responses=res
       setResp(r)
-      console.log(resp)
+    }
+
+    function submit(e){
+       console.log(resp)
     }
 
     const handle=(e,feild)=>{
@@ -77,6 +96,8 @@ export default (props)=>{
 
     return (
         <div className="base">
+                {Object.keys(data).length>0 &&
+
             <div className="inner">
               <div className="top">
                 <span id="title">{data.name}</span>
@@ -84,12 +105,12 @@ export default (props)=>{
               </div>
               {data.feilds.map((feild)=>{
                   return (
-                      <div className="feild">
+                      <div className="feild" key={feild.fid}>
                          <label>{feild.title}
                          <div>
                              {
                              feild.type===1?
-                                 <input type="text" name={feild.fid} id={"f"+feild.fid} onChange={(e)=> onFeildInput(e,feild)}/>
+                                 <input  type="text" name={feild.fid} id={"f"+feild.fid} onChange={(e)=> onFeildInput(e,feild)}/>
                              :feild.type===2?
                                 <div id={"f"+feild.fid}>
                                    {feild.options.map((option)=>{
@@ -109,7 +130,11 @@ export default (props)=>{
                       </div>
                   )
               })}
+            <div className="subcon">  
+                <button id="submit" onClick={submit}>submit</button>
             </div>
+            </div>
+}
        </div>
     )
 }

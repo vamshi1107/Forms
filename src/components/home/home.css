@@ -1,0 +1,13 @@
+.form {
+  height: 200px;
+  width: 200px;
+  border: 1px solid grey;
+  margin: 20px;
+  border-radius: 5px;
+}
+
+.formcon {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}

@@ -134,3 +134,7 @@ input[type="text"]:focus {
   border-bottom: 2px solid grey;
   font-size: 20px;
 }
+
+a {
+  text-decoration: none;
+}
