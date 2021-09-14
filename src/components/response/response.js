@@ -20,6 +20,8 @@ export default (props)=>{
     async function getData() {
       var rpk=await axios.post(url+"/getresp",{"formid":id+"","respid":rp+""})
       setData({...rpk.data})
+        console.log(rpk.data)
+
    }
 
 
@@ -31,6 +33,7 @@ export default (props)=>{
               <div className="top">
                 <span id="title">{data.name}</span>
                 <span id="desp">{data.description}</span>
+                <span>{data.user}</span>
               </div>
 
               {data.feilds.map((feild)=>{

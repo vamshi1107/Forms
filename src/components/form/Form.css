@@ -2,7 +2,8 @@
   --color: #f0ebf8;
   --feild-color: white;
   --border-sides: 0.01px solid rgba(146, 143, 143, 0.555);
-  --border-top: 10px solid blueviolet;
+  --border-top: 10px solid;
+  --border-top-color: rgb(168, 117, 216);
 }
 
 .base {
@@ -46,6 +47,7 @@
   justify-content: space-around;
   padding: 20px;
   border-top: var(--border-top);
+  border-top-color: var(--border-top-color);
   border-left: var(--border-sides);
   border-right: var(--border-sides);
   border-bottom: var(--border-sides);
@@ -144,4 +146,21 @@
   border: var(--border-sides);
   cursor: pointer;
   margin-right: 10px;
+}
+
+.uname {
+  font-weight: bold;
+}
+
+.glogin {
+  width: max-content;
+  height: max-content;
+}
+
+.err {
+  border: 1px solid red;
+}
+
+.top .err {
+  border-top-color: red;
 }

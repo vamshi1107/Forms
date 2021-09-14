@@ -161,4 +161,8 @@ a {
   border: var(--border-sides);
   border-radius: 5px;
   margin: 10px auto;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 5px;
 }

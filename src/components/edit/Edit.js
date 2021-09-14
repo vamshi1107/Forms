@@ -115,6 +115,16 @@ export default (props)=>{
         setForm(data)
     }
 
+     function remove(e,id){
+        var form={"formid":id}
+        axios.post(url+"/remove",form).then(res=>{
+            var status=res.data
+            if (status){
+               history.push("/")
+            }
+        })
+   }
+
     function showResponses(e,formid){
        history.push("/showresponses/"+formid)
     }
@@ -148,6 +158,7 @@ export default (props)=>{
                    <div id="adder">
                   <button onClick={(e)=>AddFeild(e,1)} className="addbut">+Add Input</button>
                    <button onClick={(e)=>AddFeild(e,2)} className="addbut">+Add Choice</button>
+                   <button onClick={(e)=>remove(e,data.formid)} className="addbut">Delete from</button>
                    <button className="addbut"><a className="addbut" href={"/viewform/"+data.formid} target="/" onClick={save}>Open</a></button>
                    <button id="savebut" onClick={(e)=>save(e)}>Save</button>
               </div>
@@ -190,7 +201,7 @@ export default (props)=>{
                  {resp.length>0 && resp.map(r=>{
                      return (
                          <div className="response">
-                           <Link to={"/showresponse/"+r.formid+"/"+r.respid}>{r.formid}</Link>
+                           <Link to={"/showresponse/"+r.formid+"/"+r.respid}>{r.user}</Link>
                          </div>
                      )
                  })}

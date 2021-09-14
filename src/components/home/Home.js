@@ -38,15 +38,7 @@ export default (props)=>{
         })
    }
 
-   function remove(e,id){
-        var form={"formid":id}
-        axios.post(url+"/remove",form).then(res=>{
-            var status=res.data
-            if (status){
-               window.location.reload(false);
-            }
-        })
-   }
+  
 
     return (
         <div>
@@ -55,13 +47,12 @@ export default (props)=>{
             {forms.length>0 &&
                 forms.map(ele=>{
                      return(
-                       <div key={ele.formid} className="form">
-                            <span onClick={(e)=>remove(e,ele.formid)} className="rem">X</span>
                             <Link to={"editform/"+ele.formid}>
-                               <div>{ele.name}</div>
+                               <div key={ele.formid} className="form">
+                                      <div>{ele.name}</div>
+                                </div>
                            </Link>
 
-                       </div>
                    ) 
                })
              }

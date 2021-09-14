@@ -1,14 +1,18 @@
 import { useEffect, useState } from "react"
 import "./Form.css"
 import axios from 'axios';
-import { url } from "../server";
+import { cid, url } from "../server";
 import  {randomBytes} from "crypto"
+import GoogleLogin, { GoogleLogout } from "react-google-login";
 
  
 export default (props)=>{
    
     var [data,setData]=useState({})
     var [resp,setResp]=useState({})
+    var [login,setLogin]=useState(false)
+    var [user,setUser]=useState({})
+
 
     var id=props.id
 
@@ -54,11 +58,28 @@ export default (props)=>{
     }
 
     async function submit(e){
-      var res=await axios.post(url+"/addresp",resp)
+      if(login){
+      var v=resp
+      v["user"]=user.email
+      var res=await axios.post(url+"/addresp",v)
       var con=res.data
       if(con.insertedCount>0){
           window.location.reload(false);
       }
+    }
+    else{
+        var r = document.querySelector(':root');
+        var gl = document.querySelector('.glogin');
+        var rs = getComputedStyle(r);
+        var c=rs.getPropertyValue('--border-top-color')
+        r.style.setProperty('--border-top-color', 'red');
+        gl.classList.toggle("err")
+        setTimeout(()=>{
+            r.style.setProperty('--border-top-color', c);
+            gl.classList.toggle("err") 
+        },2000)
+        
+    }
     }
 
     const handle=(e,feild)=>{
@@ -100,6 +121,24 @@ export default (props)=>{
           }
     }
 
+    function loginsuccess(response){
+        setLogin(true)
+        setUser(response.profileObj)
+    }
+
+    function loginfailure(response){
+        console.log(response)
+    }
+
+    function logoutsuccess(response){
+        setLogin(false)
+        setUser({})
+    }
+
+    function logoutfailure(response){
+        console.log(response)
+    }
+
     return (
         <div className="base">
                 {Object.keys(data).length>0 &&
@@ -108,8 +147,31 @@ export default (props)=>{
               <div className="top">
                 <span id="title">{data.name}</span>
                 <span id="desp">{data.description}</span>
+                {!login&&
+                <div 
+                  className="glogin"
+                >
+                <GoogleLogin
+                  clientId={cid}
+                  buttonText="login with google"
+                  cookiePolicy={"single_host_origin"}
+                  onSuccess={loginsuccess}
+                  onFailure={loginfailure}
+                ></GoogleLogin>
+                </div>
+                }
+                {login&&<div>
+                    <div className="uname">{user.email}</div>
+                     <GoogleLogout
+                  className="glogin"
+                  clientId={cid}
+                  buttonText="logout"
+                  cookiePolicy={"single_host_origin"}
+                   onLogoutSuccess={logoutsuccess}
+                ></GoogleLogout></div>
+                    }
+               
               </div>
-
               {data.feilds.map((feild)=>{
                   return (
                       <div className="feild" key={feild.fid}>
