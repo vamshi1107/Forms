@@ -1,15 +1,22 @@
 .form {
   height: 200px;
   width: 200px;
-  border: 1px solid grey;
+  border: var(--border-sides);
   margin: 20px;
   border-radius: 5px;
+  background-color: var(--feild-color);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
 }
 
 .formcon {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+  padding: 15px;
 }
 
 .rem {
@@ -17,4 +24,81 @@
   width: 50px;
   height: 50px;
   float: right;
+}
+
+.page {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin: 10px auto;
+}
+
+.gbutt {
+  width: 30%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.gbutt > button {
+  width: 80%;
+  font-size: 1.7rem;
+  height: 50px;
+}
+
+@media only screen and (min-width: 320px) and (max-width: 400px) {
+  .page {
+    flex-direction: column;
+  }
+}
+
+.afterpage {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  padding: 5px 5px;
+}
+
+.pagetop {
+  width: 95%;
+  height: 30vh;
+  margin-top: 10px;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: var(--feild-color);
+  border: var(--border-sides);
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-end;
+  border-radius: 10px;
+}
+
+.outbut {
+  margin: 20px;
+  height: 50px;
+  width: 200px;
+  border: var(--border-sides);
+  border-radius: 10px;
+  background-color: var(--feild-color);
+}
+
+.userpic {
+  margin: 20px;
+  border-radius: 50%;
+  overflow: hidden;
+  height: 150px;
+  width: 150px;
+}
+
+.userpic > img {
+  height: 100%;
+  width: 100%;
 }

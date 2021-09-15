@@ -1,9 +1,10 @@
-import {useEffect, useState} from 'react'
+import {useContext, useEffect, useState} from 'react'
 import axios from 'axios'
 import  {randomBytes} from "crypto"
 import { url } from '../server'
 import "./edit.css"
 import { Link,useHistory } from "react-router-dom"
+import userContext from '../../context/userContext'
 
 
 export default (props)=>{
@@ -12,8 +13,35 @@ export default (props)=>{
     const [resp,setRep]=useState([])
     let history=useHistory()
 
+    const us=useContext(userContext)
+
+    const user=us.user
+
+    checkLog()
+
+    window.onload=(e)=>{
+       checkLog()
+    }
+
+     function checkLog(){
+       if(window.localStorage.getItem("login")!=null){
+             if(eval(window.localStorage.getItem("login"))){
+                 user.login=true
+                 user.info=JSON.parse(window.localStorage.getItem("info"))
+             }
+             else{
+                 user.login=false
+                 history.push("/") 
+             }
+       }
+       else{
+           window.localStorage.setItem("login","false")
+           history.push("/")
+       }
+    }
+
     useEffect(()=>{
-         axios.post(url+"/get",{"formid":props.match.params.id}).then(res=>{
+         axios.post(url+"/get",{"formid":props.match.params.id,"user":user.info.email}).then(res=>{
             var con=res.data
             setData({...con})
         })
@@ -31,11 +59,10 @@ export default (props)=>{
 
     const setForm=(data)=>{
         setData(data)
-        console.log("saved")
-        console.log(data)
         axios.post(url+"/add",data).then(res=>{
-            
+          
         })
+        return  true
     }
 
     const DataHandler=(e)=>{
@@ -111,8 +138,24 @@ export default (props)=>{
         })
         setData({...k})
     }
-    const save=(e)=>{
-        setForm(data)
+    const save=async (e)=>{
+        if(data.name!=""){
+            var v=await setForm(data)
+            if(v){
+                var but=document.getElementById("savebut")
+                var c=but.innerText
+                var co=but.style.backgroundColor
+                but.style.backgroundColor="white"
+                but.innerText="Saved"
+                setTimeout(()=>{
+                     but.style.backgroundColor=co
+                     but.innerText=c
+                },1000)
+            } 
+        }
+        else{
+            alert("Name should not be none")
+        }
     }
 
      function remove(e,id){

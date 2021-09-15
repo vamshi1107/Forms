@@ -139,6 +139,10 @@ export default (props)=>{
         console.log(response)
     }
 
+    function cont(){
+       document.getElementById("glog").firstChild.click()
+    }
+
     return (
         <div className="base">
                 {Object.keys(data).length>0 &&
@@ -147,9 +151,9 @@ export default (props)=>{
               <div className="top">
                 <span id="title">{data.name}</span>
                 <span id="desp">{data.description}</span>
-                {!login&&
-                <div 
+                 <div 
                   className="glogin"
+                  id="glog"
                 >
                 <GoogleLogin
                   clientId={cid}
@@ -159,16 +163,22 @@ export default (props)=>{
                   onFailure={loginfailure}
                 ></GoogleLogin>
                 </div>
+                {!login&&<div>
+                    <span id="msg" onClick={cont}>sign in with google</span>
+                </div>
                 }
-                {login&&<div>
+                {login&&
+                <div className="subl">
                     <div className="uname">{user.email}</div>
-                     <GoogleLogout
-                  className="glogin"
-                  clientId={cid}
-                  buttonText="logout"
-                  cookiePolicy={"single_host_origin"}
-                   onLogoutSuccess={logoutsuccess}
-                ></GoogleLogout></div>
+                     {/* <GoogleLogout
+                      className="glogin"
+                      clientId={cid}
+                      buttonText="logout"
+                       cookiePolicy={"single_host_origin"}
+                       onLogoutSuccess={logoutsuccess}
+                     ></GoogleLogout> */}
+                     <span onClick={cont} className="swt">switch</span>
+                </div>
                     }
                
               </div>
