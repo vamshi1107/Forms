@@ -60,7 +60,7 @@ export default (props)=>{
     async function submit(e){
       if(login){
       var v=resp
-      v["user"]=user.email
+      v["ruser"]=user.email
       var res=await axios.post(url+"/addresp",v)
       var con=res.data
       if(con.insertedCount>0){

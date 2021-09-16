@@ -33,7 +33,7 @@ export default (props)=>{
               <div className="top">
                 <span id="title">{data.name}</span>
                 <span id="desp">{data.description}</span>
-                <span>{data.user}</span>
+                <span>{data.ruser}</span>
               </div>
 
               {data.feilds.map((feild)=>{
