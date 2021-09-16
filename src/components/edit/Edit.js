@@ -244,7 +244,7 @@ export default (props)=>{
                  {resp.length>0 && resp.map(r=>{
                      return (
                          <div className="response">
-                           <Link to={"/showresponse/"+r.formid+"/"+r.respid}>{r.user}</Link>
+                           <Link to={"/showresponse/"+r.formid+"/"+r.respid}>{r.ruser}</Link>
                          </div>
                      )
                  })}
