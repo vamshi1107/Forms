@@ -21,6 +21,7 @@ export default (props)=>{
       var rpk=await axios.post(url+"/getresp",{"formid":id+"","respid":rp+""})
       setData({...rpk.data})
         console.log(rpk.data)
+        
 
    }
 
