@@ -20,13 +20,16 @@ input[type="text"]:focus {
   min-height: 25px;
   border-radius: 5px;
   background-color: var(--feild-color);
-  margin: 10px;
+  width: 100%;
+  margin: 10px auto;
   display: flex;
   flex-direction: row;
   padding: 20px;
   border: var(--border-sides);
   align-items: center;
   justify-content: space-around;
+  top:0px;
+  position: sticky;
 }
 
 .addbut {
@@ -144,7 +147,8 @@ a {
   height: 60px;
   border: var(--border-sides);
   border-radius: 5px;
-  margin: 10px;
+  margin: 10px auto;
+  width: 100%;
 }
 
 #pills-tab {

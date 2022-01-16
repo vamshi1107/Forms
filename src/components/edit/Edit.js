@@ -5,7 +5,7 @@ import { url } from '../server'
 import "./edit.css"
 import { Link,useHistory } from "react-router-dom"
 import userContext from '../../context/userContext'
-
+import {Chart} from "react-google-charts"
 
 export default (props)=>{
 
@@ -49,13 +49,19 @@ export default (props)=>{
     },[])
 
      useEffect(()=>{
-         axios.post(url+"/showresp",{"formid":props.match.params.id}).then(res=>{
-            var c=res.data
-            c=Array.from(c)
-            setRep(c)
-        })
-        
+        getResponses()
     },[])
+
+    const getResponses=()=>{
+        setInterval(() => {
+             axios.post(url+"/showresp",{"formid":props.match.params.id}).then(res=>{
+                var c=res.data
+                c=Array.from(c)
+                setRep(c)
+        })
+        }, 3000);
+        
+    }
 
     const setForm=(data)=>{
         setData(data)
@@ -158,18 +164,85 @@ export default (props)=>{
         }
     }
 
-     function remove(e,id){
-        var form={"formid":id}
-        axios.post(url+"/remove",form).then(res=>{
-            var status=res.data
-            if (status){
-               history.push("/")
-            }
-        })
+     async function remove(e,id){
+         var v=await window.confirm("Do you want to delete form?")
+         if(v){
+            var form={"formid":id}
+            axios.post(url+"/remove",form).then(res=>{
+                var status=res.data
+                if (status){
+                history.push("/")
+                }
+            })
+        }
    }
 
     function showResponses(e,formid){
        history.push("/showresponses/"+formid)
+    }
+
+    const frequency=(r)=>{
+        var counts={}
+        for (const num of r) {
+                    counts[num] = counts[num] ? counts[num] + 1 : 1;
+        }
+        return counts
+    }
+
+    const getChart=(feild)=>{
+        var fid=feild.fid
+        var r=[]
+        var v
+        for(let i of resp){
+                v=i["responses"].find(ele=>ele.fid==fid)
+                if(v!=undefined){
+                    r.push(v)
+                }
+        }
+        r=r.map(ele=>[ele.response.toLowerCase()])
+        var ans=[["response","Count"]]
+        var counts=frequency(r)
+        for(let i of Object.keys(counts)){
+                    ans.push([i,counts[i]])
+        }
+        var type=feild.type==2?"PieChart":"Bar"
+        if(ans.length>1){
+                return (
+                    <Chart
+                            width={600}
+                            height={'350px'}
+                            chartType={type}
+                            loader={<div>Loading Chart</div>}
+                            data={ans}
+                            options={{
+                                vAxis: { title: 'response', titleTextStyle: { color: '#333' } },
+                                hAxis: { minValue: 0 },
+                            }}
+                        
+                            />
+                     )
+                }
+        
+    }
+
+    const statsPage=()=>{
+        return (
+            <>
+                {data.feilds.map((feild)=>{
+                  return (
+                      <div className="feild" key={feild.fid}>
+                         <label><span style={{fontWeight:"bold"}}>{feild.title}</span>
+                         <div className="chart"> 
+                             {
+                                 getChart(feild)
+                             }
+                         </div>
+                         </label>
+                      </div>
+                  )
+              })}
+            </>
+        )
     }
     
     return (
@@ -177,7 +250,7 @@ export default (props)=>{
             {Object.keys(data).length>0&&
             <div className="inner">
             
-              <div className="top">
+              <div className="top" style={{"width":"100%","margin":"10px auto"}}>
                 <span id="title"><input onChange={DataHandler}  name="name" type="text" placeholder="Name" autoComplete="off" value={data.name}/></span>
                 <span id="desp"><input onChange={DataHandler} name="description" type="text" placeholder="Description" autoComplete="off" value={data.description}/></span>
               </div>
@@ -190,15 +263,20 @@ export default (props)=>{
                </li>
                <li className="nav-item" role="presentation">
                      <button className="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">
-                     Responses
+                       Responses
                     </button>
-              </li>
+                </li>
+                 <li className="nav-item" role="presentation">
+                     <button className="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-stats" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">
+                       Statistics
+                    </button>
+                </li>
             </ul>
             </div>
            <div className="tab-content" id="pills-tabContent">
                <div className="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
 
-                   <div id="adder">
+              <div id="adder">
                   <button onClick={(e)=>AddFeild(e,1)} className="addbut">+Add Input</button>
                    <button onClick={(e)=>AddFeild(e,2)} className="addbut">+Add Choice</button>
                    <button onClick={(e)=>remove(e,data.formid)} className="addbut">Delete from</button>
@@ -250,7 +328,9 @@ export default (props)=>{
                  })}
                  </div>
               </div>
-
+             <div className="tab-pane fade" id="pills-stats" role="tabpanel" aria-labelledby="pills-profile-tab">
+                  {statsPage()}
+              </div>
             </div>
             
             </div>

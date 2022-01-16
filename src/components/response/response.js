@@ -18,12 +18,10 @@ export default (props)=>{
      },[id])
 
     async function getData() {
-      var rpk=await axios.post(url+"/getresp",{"formid":id+"","respid":rp+""})
-      setData({...rpk.data})
-        console.log(rpk.data)
-        
-
+         var rpk=await axios.post(url+"/getresp",{"formid":id+"","respid":rp+""})
+        setData({...rpk.data})
    }
+
 
 
     return (
