@@ -119,24 +119,42 @@ input[type="text"]:focus {
 }
 
 .opcon {
+  width: 70%;
   display: flex;
   flex-direction: column;
 }
 
-.opcon > label > input[type="radio"] {
+.opcon >div{
+  width: 100%;
+}
+
+.opcon>div>label {
+  width: 70%;
+}
+
+.opcon >div> label > input[type="radio"] {
   width: 15px;
   height: 15px;
   outline: none;
   margin-right: 10px;
 }
 
-.opcon > label > input[type="text"] {
-  max-width: max-content;
+.opcon>div > label > input[type="text"] {
+  max-width: 70%;
   min-width: 50px;
   border: none;
   border-bottom: 2px solid grey;
-  font-size: 20px;
+  font-size: 1rem;
 }
+
+.opcon>div>label>span {
+  font-size: 1rem
+}
+
+.opcon>div>span:hover {
+  color: red;
+}
+
 
 a {
   text-decoration: none;

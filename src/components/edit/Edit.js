@@ -130,8 +130,11 @@ export default (props)=>{
 
      const removeOption=(fid,oid)=>{
         let k=data
-        k.feilds=k.feilds.filter(ele=>ele.fid!==fid)
-        
+        for(let i of k.feilds){
+            if(i.fid==fid){
+                i.options= i.options.filter(e=>e.oid!=oid)
+            }
+        }
     }
 
     const onOpChange=(e,fid)=>{
@@ -228,7 +231,7 @@ export default (props)=>{
     const statsPage=()=>{
         return (
             <>
-                {data.feilds.map((feild)=>{
+                {data.feilds.filter(ele=>ele.type==2).map((feild)=>{
                   return (
                       <div className="feild" key={feild.fid}>
                          <label><span style={{fontWeight:"bold"}}>{feild.title}</span>
@@ -297,11 +300,13 @@ export default (props)=>{
                                    <div  onClick={(e)=>{addOption(e,feild)}} className="addbut">+ Add Option</div>
                                    {feild.options.map((option)=>{
                                        return (
-                                               <label>
+                                        <div>
+                                            <label>
                                                     <input type="radio" name={option.oid}/>
                                                     <input onChange={(e)=>optionChange(e,feild.fid,option.oid)} type="text" value={option.option}></input>
-                                                    <span onClick={(e)=>{removeOption(feild.fid,option.oid)}}>Remove</span>
-                                               </label>
+                                            </label>
+                                            <span onClick={(e)=>{removeOption(feild.fid,option.oid)}}>Remove</span>
+                                        </div>
                                        )
                                    })}
                                 </div>
